@@ -15,8 +15,8 @@ typedef struct
 
 typedef struct  
 {
-	SDL_Surface *menuFond[3],*help,*settings,*quit,*fond;
-	SDL_Rect positionMenuFond,positionmenuQuitter,positionhelp,positionsettings,posfond;
+	SDL_Surface *menuFond[3],*help,*settings,*quit,*fond,*GAMEMODE[1],*GAME[1];
+	SDL_Rect positionMenuFond,positionmenuQuitter,positionhelp,positionsettings,posfond,posGAMEMODE,posGAME;
 	 Mix_Music* backgroundSound;
     Mix_Chunk* button;	
 }MENU;
@@ -26,10 +26,10 @@ typedef struct
 void initialiserAnimation(animation *ANIM,SDL_Surface *ecran);
 void libereranimation(animation *ANIM);
 void initialiserMenu(MENU *menu);
-void updateMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,int *soundMusic,int *x,SDL_Event event,int *continuer,int *i_help,int *i_quit);
+void updateMenu(SDL_Surface *ecran,int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,int *soundMusic,int *x,SDL_Event event,int *continuer,int *i_help,int *i_quit,int *i_GAME_MODE,int *i_GAME);
 void libererationMENU (MENU *menu);
 void afficherfond(SDL_Surface *ecran,MENU *menu);
-void afficherMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,int *soundMusic,MENU *menu,SDL_Surface *ecran,int *i_help,int *i_quit,int *x);
+void afficherMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,int *soundMusic,MENU *menu,SDL_Surface *ecran,int *i_help,int *i_quit,int *x,int *i_GAME_MODE,int *i_GAME);
 void intiMUSIC(MENU *menu);
 void PlayMusic(MENU *menu);
 void WAVmusic(MENU *menu,int *x);
