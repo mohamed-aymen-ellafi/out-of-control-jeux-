@@ -1,83 +1,75 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_mixer.h>
-#include "fnc.h"
-void  main(SDL_Surface *ecran)
+#include "AI.h"
+int main(int argc, char const *argv[])
 {
-    personage per;
-    image2 *bg;
+    int i=0,i2=0,i3=0, d=0;
+    Struct_robot ROBOT;
+    ROBOT2 robot,robot1;
+    point point;
+    Struct_robotAtt ROBOTA;
     SDL_Event event;
-     SDL_Rect px;
-      px.x=250;
-      px.y=370;
-      Uint32 t_prev, dt=1; 
+    SDL_Surface *ecran = NULL,*map = NULL,*minimap = NULL,*RectangleRobot;
+    SDL_Rect  positionmap,positionminimap,PosRectangleRobot;
+    miniMAP MP;
+    positionmap.x=0;
+    positionmap.y=100;
+positionminimap.x=200;
+    positionminimap.y=110;
 
-    int continuer=1,i=0,t=0,x,y;
-    int vitesse =10,a;
+    PosRectangleRobot.x=500;
+    PosRectangleRobot.y=250;
 
-    SDL_Surface* ob;
 
-    SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO); 
-    ecran=SDL_SetVideoMode(900, 700, 32,SDL_HWSURFACE);
-    image img;
-    image2 img2;
 
-    init_perso(&per);
-    
-    init_img(&img);
-    init_img2(&img2);
-    ob=IMG_Load("o.png");
-    SDL_EnableKeyRepeat(100,100); 
-    while (continuer)
-    { t_prev = SDL_GetTicks();
-      i=input(&per,i,&continuer,dt);
-          /* per.positionperso.x+=vitesse;
-            i++;*/
-            if (i==9)
-            {
-            i=0;
-            }
+
+
+         
+    map=IMG_Load("map.png");
+        minimap=IMG_Load("minimap.png");
+
+    RectangleRobot=IMG_Load("Rectangle.png");
+    SDL_Init(SDL_INIT_VIDEO);
+    ecran = SDL_SetVideoMode(900, 700, 32, SDL_HWSURFACE | SDL_DOUBLEBUF| SDL_RESIZABLE);
+    //initialiser
+    initialiser (&ROBOT);
+    initialiser2(&robot);
+     initialiserpoint (&point);
+     initialiserattack(&ROBOTA);
+    while (ROBOT.A)
+    {
+        d=AI(&robot,&ROBOT,ecran);
         SDL_PollEvent(&event);
-        switch(event.type)
-          {
-            case SDL_QUIT:
-            continuer = 0;
-            break;
-          }
+        {
+        if (event.type==SDL_QUIT)
+            (ROBOT.A)=0;
+        }
+         SDL_BlitSurface(RectangleRobot,NULL, ecran,&PosRectangleRobot);
+    
+          //i2=robot2mouvemant(&robot,ecran,i2,robot.Posrobot);
+        
+        
+        //deplacer robot
+        i=Mouvemant(&ROBOT,ecran,i);
+        
+        
+        Mouvemantpoint(&point,ecran,&MP);
 
-          SDL_Delay(100);
-          
-                    display(ecran,&img,&per);
+        
+        //afficher
+        affichage(&ROBOT,&ROBOTA,ecran,i,map,positionmap,minimap,positionminimap,d);
+        Testecran(&ROBOT);
+        affichage2(&robot,ecran,i2,RectangleRobot,PosRectangleRobot,&point);
+        SDL_Flip(ecran);
+        
+    }
+
+   liberation(&ROBOT);
+   liberation2(&robot);
+   SDL_FreeSurface(map);
+      SDL_FreeSurface(minimap);
+            SDL_FreeSurface(point.point);
 
 
-          display_perso(ecran,&per,i);
-         if (per.positionperso.x<px.x)
-{
-  SDL_BlitSurface(ob, NULL, ecran, &px);
+   SDL_Quit();
+
+
 }
-
-          jump ( &per);
-          SDL_Flip(ecran);
-          dt = SDL_GetTicks()-t_prev;
-            if (1000/FPS>dt)
-            SDL_Delay(1000/FPS-dt);
-                      // collision_perprisens1(&img2,&per); 
-
-
-         if (per.positionperso.x>800)
-          per.positionperso.x=0;
-              
-    }    
-
-
-   for(i=0;i<=9;i++)
-    SDL_FreeSurface(per.perso[i]);
-}
-
-
-
-
-
-
