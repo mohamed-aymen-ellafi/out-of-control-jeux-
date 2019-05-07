@@ -50,7 +50,13 @@
     menu->posfond.x=0;
     menu->posfond.y=40;
 
-            menu->fond=IMG_Load("6.png");
+    menu->posGAMEMODE.x=0;
+    menu->posGAMEMODE.y=50;
+
+    menu->posGAME.x=0;
+    menu->posGAME.y=50;
+
+           
             
       
 
@@ -58,9 +64,9 @@
 
 }
 
-
 void afficherfond(SDL_Surface *ecran,MENU *menu)
 {
+ menu->fond=IMG_Load("6.png");
   SDL_BlitSurface(menu->fond,NULL,ecran,&menu->posfond);
 }
 
@@ -96,11 +102,10 @@ void libererMUSIC(MENU *menu)
       Mix_CloseAudio();
 }
 
-void updateMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,int *soundMusic,int *x,SDL_Event event,int *continuer,int *i_help,int *i_quit)
+void updateMenu(SDL_Surface *ecran,int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,int *soundMusic,int *x,SDL_Event event,int *continuer,int *i_help,int *i_quit,int *i_GAME_MODE,int *i_GAME)
 {
         SDL_WaitEvent(&event); 
         switch(event.type) 
-
         {
             case SDL_QUIT: 
                 *continuer = 0;
@@ -112,11 +117,12 @@ void updateMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,i
                   case 15:
                   system("xdg-open https://aymenthedon.wixsite.com/out-of-control?fbclid=IwAR1KBVlepADYniI7W3x_lZP5a7x7ILUa--yhFc7XeqHOUxxee16h379iUP8");
                   break;
+
                  }
 
             switch(event.key.keysym.sym)
             {   
-            case SDLK_UP:
+             case SDLK_UP:
                 if(*i==1)
                     *i=4;
                 else if (*i==6)
@@ -126,6 +132,20 @@ void updateMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,i
                             *i_settings=1;
                         }
                     else  *i_settings=2  ;
+                }
+                else if (*i==8)
+                {
+                  if (*i_GAME_MODE==2)
+                    *i_GAME_MODE=1;
+
+                  else *i_GAME_MODE=2;
+                }
+                else if (*i==9)
+                {
+                  if (*i_GAME==2)
+                    *i_GAME=1;
+
+                  else *i_GAME=2;
                 }
                 else
                     (*i)--;
@@ -143,20 +163,49 @@ void updateMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,i
                         }
                     else  *i_settings=1;
                 }
+                else if (*i==8)
+                {
+                  if (*i_GAME_MODE==1)
+                    *i_GAME_MODE=2;
 
+                  else *i_GAME_MODE=1;
+                }
+               else if (*i==9)
+                {
+                  if (*i_GAME==1)
+                    *i_GAME=2;
+
+                  else *i_GAME=1;
+                }
                 else
                     (*i)++;
                 break;
+               case SDLK_f:
+               //SDL_WINDOW_FULLSCREEN;
+                  SDL_WM_ToggleFullScreen(ecran);
+                  break;
 
-               
             case SDLK_RETURN:
                 if((*i)==1)
                 {
-                    
-                    (*x)=1;
-                    
-                    
-                } 
+                    //GAME();
+                    (*x)=1; 
+                    (*i)=8;
+                    printf("%d\n",*i );
+                }
+                if (*i==8)
+                {
+                  *i=9;
+                }
+                /*if (*i==8)
+                {
+                  (*i)=9;
+                } */
+                if ((*i==9)&&(*i_GAME==1))
+                {
+                  Mix_CloseAudio();
+                  GAME();
+                }
                 if((*i)==2)
                 {
                     (*x)=2;
@@ -198,6 +247,10 @@ void updateMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,i
                   
 
                 }
+              
+             
+                else if (*i==9)
+                  *i=8;
               break;
               case SDLK_SPACE:
               if (*i_settings==1&&*soundSpace==1)
@@ -277,6 +330,7 @@ void updateMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,i
                 if((*i)==1)
                 {
                     (*x)=1;
+                    *i=8;
                     
                 }
                 if((*i)==2)
@@ -304,14 +358,13 @@ void updateMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,i
 }
 
 
-void afficherMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,int *soundMusic,MENU *menu,SDL_Surface *ecran,int *i_help,int *i_quit,int *x)
-{
-
+void afficherMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace,int *soundMusic,MENU *menu,SDL_Surface *ecran,int *i_help,int *i_quit,int *x,int *i_GAME_MODE,int *i_GAME)
+{       
         if(*i==1)
         {
           menu->menuFond[0]= IMG_Load("menu1[play].png");            
             SDL_BlitSurface(menu->menuFond[0], NULL, ecran, &menu->positionMenuFond);
-            SDL_Flip(ecran);       
+            SDL_Flip(ecran);   
         }
 
         if(*i==2)
@@ -319,14 +372,14 @@ void afficherMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace
           menu->menuFond[1]= IMG_Load("menu1[help].png");           
             
             SDL_BlitSurface(menu->menuFond[1], NULL, ecran, &menu->positionMenuFond);
-            SDL_Flip(ecran);         
+           SDL_Flip(ecran);         
         }
         if(*i==3)
         {
             menu->menuFond[2]= IMG_Load("menu1[settings].png");
            
             SDL_BlitSurface(menu->menuFond[2], NULL, ecran, &menu->positionMenuFond);
-                  SDL_Flip(ecran);
+           SDL_Flip(ecran);
 
         }
         if(*i==4)
@@ -334,25 +387,26 @@ void afficherMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace
            menu->menuFond[3]= IMG_Load("menu1[quit].png"); 
 
             SDL_BlitSurface(menu->menuFond[3], NULL, ecran, &menu->positionMenuFond);
-                  SDL_Flip(ecran);
+                 SDL_Flip(ecran);
                   if (*x==4)  
                   {
                     menu->quit=IMG_Load("no.png");
                      SDL_BlitSurface(menu->quit,NULL,ecran,&menu->positionmenuQuitter);
-                  SDL_Flip(ecran);
+                     SDL_Flip(ecran);
+                 
                   }
                   if (*i_quit==1)  
                   {
                     menu->quit=IMG_Load("yes.png");
                      SDL_BlitSurface(menu->quit,NULL,ecran,&menu->positionmenuQuitter);
-                  SDL_Flip(ecran);
+                 SDL_Flip(ecran);
                   }
 
                   if (*i_quit==0)  
                   {
                     menu->quit=IMG_Load("no.bmp");
                      SDL_BlitSurface(menu->quit,NULL,ecran,&menu->positionmenuQuitter);
-                  SDL_Flip(ecran);
+                 SDL_Flip(ecran);
 
                   }
                   
@@ -365,7 +419,7 @@ void afficherMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace
                    menu->help=IMG_Load("help1.png");
  
             SDL_BlitSurface(menu->help, NULL, ecran, &menu->positionhelp);
-                  SDL_Flip(ecran);
+                 SDL_Flip(ecran);
                 }
                 else if (*i_help==0)
                 {
@@ -381,13 +435,12 @@ void afficherMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace
             }
             
           if (*i==6)
-          {
-                            
+          {                           
             if (*soundSpace==1&&*soundMusic==1)
                             {
                             menu->settings=IMG_Load("settings1.png");
                             SDL_BlitSurface(menu->settings,NULL,ecran,&menu->positionsettings);
-                            SDL_Flip(ecran);
+                SDL_Flip(ecran);
                             //SDL_PauseAudio(0);
                             }
                
@@ -413,8 +466,39 @@ void afficherMenu(int *i,int *i_settings,int *sauvgarde_settings,int *soundSpace
                             SDL_Flip(ecran);
                            // SDL_PauseAudio(0);
                         }
+                  }
+                  if (*i==8)
+                  {
+                    if ((*i_GAME_MODE)==1)
+                            {
+                              menu->GAMEMODE[0]=IMG_Load("play2-01.png");
+                              SDL_BlitSurface(menu->GAMEMODE[0], NULL, ecran, &menu->posGAMEMODE);
+                         SDL_Flip(ecran);
+                            } 
+                            else if ((*i_GAME_MODE)==2)
+                            {
+                              menu->GAMEMODE[1]=IMG_Load("play1-01.png");
+                              SDL_BlitSurface(menu->GAMEMODE[1], NULL, ecran, &menu->posGAMEMODE);
+                            SDL_Flip(ecran);
+                            }
 
                   }
+                  if (*i==9)
+                   {
+                    if ((*i_GAME)==1)
+                            {
+                              menu->GAME[0]=IMG_Load("newgame-01.png");
+                              SDL_BlitSurface(menu->GAME[0], NULL, ecran, &menu->posGAME);
+                          SDL_Flip(ecran);
+                            } 
+                            else if ((*i_GAME)==2)
+                            {
+                              menu->GAME[1]=IMG_Load("loadgame-01.png");
+                              SDL_BlitSurface(menu->GAME[1], NULL, ecran, &menu->posGAME);
+                            SDL_Flip(ecran);
+                            }
+
+                  } 
 } 
 void libererationMENU (MENU *menu)
 {
@@ -424,4 +508,8 @@ void libererationMENU (MENU *menu)
     SDL_FreeSurface(menu->fond);
     //SDL_FreeSurface(menu->quit);
     SDL_FreeSurface(menu->settings);
+            for (i=0;i<=1;i++)
+    SDL_FreeSurface(menu->GAMEMODE[i]);
+  for (i=0;i<=1;i++)
+    SDL_FreeSurface(menu->GAME[i]);
 }
