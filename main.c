@@ -2,6 +2,7 @@
 int main(int argc, char const *argv[])
 {
     int i=0,i2=0,i3=0, d=0;
+    Uint32 dt,t_prev;
     Struct_robot ROBOT;
     ROBOT2 robot,robot1;
     point point;
@@ -36,7 +37,8 @@ positionminimap.x=200;
      initialiserattack(&ROBOTA);
     while (ROBOT.A)
     {
-        d=AI(&robot,&ROBOT,ecran);
+        t_prev = SDL_GetTicks();
+        d=AI(&robot,&ROBOT,ecran,dt);
         SDL_PollEvent(&event);
         {
         if (event.type==SDL_QUIT)
@@ -59,6 +61,9 @@ positionminimap.x=200;
         Testecran(&ROBOT);
         affichage2(&robot,ecran,i2,RectangleRobot,PosRectangleRobot,&point);
         SDL_Flip(ecran);
+        dt = SDL_GetTicks()-t_prev;
+            if (1000/FPS>dt)
+            SDL_Delay(1000/FPS-dt);
         
     }
 
