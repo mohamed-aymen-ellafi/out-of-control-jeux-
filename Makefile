@@ -1,11 +1,6 @@
-menu:mainMenu.o menu.o
-	gcc mainMenu.o menu.o -o menu -g  -lSDL -lSDL_image -lSDL_mixer
-mainMenu.o:mainMenu.c 
-	gcc -c mainMenu.c -g 
-menu.o:menu.c
-	gcc -c menu.c -g
-
-
-
-
-
+prog:main.o AI.o
+	gcc main.o AI.o -o prog -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL
+main.o:main.c
+	gcc -c main.c
+AI.o:AI.c
+	gcc -c AI.c
