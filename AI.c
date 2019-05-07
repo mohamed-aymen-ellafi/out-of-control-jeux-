@@ -82,13 +82,13 @@ void affichage(Struct_robot *ROBOT,Struct_robotAtt *ROBOTA,SDL_Surface *ecran,in
     SDL_Delay(100);
     SDL_BlitSurface(map,NULL,ecran,&positionmap);
         SDL_BlitSurface(minimap,NULL,ecran,&positionminimap); 
-    if (distance>100)
+    if (distance>300)
     SDL_BlitSurface(ROBOT->robot[i],NULL, ecran,&ROBOT->Posrobot);
-    if (distance<100)
+    if (distance<300)
 
             SDL_BlitSurface(ROBOTA->robotattack[i],NULL, ecran,&ROBOT->Posrobot);
 
-     //SDL_Flip(ecran);
+     
 }
 
 void affichage2(ROBOT2 *robot,SDL_Surface *ecran,int i,SDL_Surface *RectangleRobot,SDL_Rect PosRectangleRobot,point *point)
@@ -100,7 +100,7 @@ void affichage2(ROBOT2 *robot,SDL_Surface *ecran,int i,SDL_Surface *RectangleRob
         SDL_BlitSurface(point->point,NULL,ecran,&point->Pospoint); 
  
     SDL_BlitSurface(robot->robot[i],NULL, ecran,&robot->Posrobot);
-     //SDL_Flip(ecran);
+     
 }
 
 int  Mouvemant(Struct_robot *ROBOT,SDL_Surface *ecran,int i)
@@ -157,17 +157,28 @@ if (robot->Posrobot.x<=480)//rectangle +largeur rectangle (limite du robot)
   }
 return i2;
 }
-int  Mouvemantattack(ROBOT2 *robot,SDL_Surface *ecran,int i2,SDL_Rect Posrobot)
+int acceleration (ROBOT2 *robot,Uint32 dt)
 {
-        
-        robot->Posrobot.x-=10;
+  int vitesse=10;
+  vitesse=robot->velocity/dt+robot->acceleration;
+  return vitesse;
+}
+int  Mouvemantattack(ROBOT2 *robot,SDL_Surface *ecran,int i2,SDL_Rect Posrobot,Uint32 dt)
+{
+        int vitesse=10;
+              robot->velocity=10;
+  robot->acceleration+=0.5;
+  
+        vitesse=acceleration(robot,dt);
+
+        robot->Posrobot.x-=vitesse;
         printf("Posrobot = %d \n",robot->Posrobot.x );
-       i2++;
+       /*i2++;
         if (i2==5)
         {
             i2=0;
         }
-        
+        */
         return i2;
 }
 
@@ -193,7 +204,7 @@ void liberation2(ROBOT2 *robot)
     SDL_FreeSurface(robot->robot[i]);   
 }
 
-int  AI(ROBOT2 *robot2,Struct_robot *robot1,SDL_Surface *ecran)
+int  AI(ROBOT2 *robot2,Struct_robot *robot1,SDL_Surface *ecran,Uint32 dt)
 {
     int i2;
     int distance = robot2->Posrobot.x - robot1->Posrobot.x;
@@ -201,12 +212,10 @@ int  AI(ROBOT2 *robot2,Struct_robot *robot1,SDL_Surface *ecran)
    if(distance > 200)//waiting
     {
       robot2->state=WAITING;
-      //i2=robot2mouvemant(robot2,ecran,i2,robot2->Posrobot);
     }
     else if (distance <= 200)//following
     {
         robot2->state=ATTACKING;
-        //i2=Mouvemantattack(robot2,ecran,i2,robot2->Posrobot);
     }
     switch (robot2->state)
     {
@@ -217,7 +226,7 @@ int  AI(ROBOT2 *robot2,Struct_robot *robot1,SDL_Surface *ecran)
         }
         case ATTACKING:
         {
-            i2=Mouvemantattack(robot2,ecran,i2,robot2->Posrobot);
+            i2=Mouvemantattack(robot2,ecran,i2,robot2->Posrobot,dt);
             break;
         }
     }
