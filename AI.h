@@ -1,16 +1,14 @@
-#ifndef  AI_H_
-#define  AI_H_
-#define FPS 60
-#define ACCELX 0
-#define ACCELY 0
-#define SCREEN_W 1000
-#define SCREEN_H 400
-#include<stdio.h>
-#include"SDL/SDL.h"
-#include"SDL/SDL_image.h"
-#include"SDL/SDL_mixer.h"
+#ifndef _robot_H
+#define _robot_H
+#include <stdlib.h>
+#include <stdio.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h> 
+#include <SDL/SDL_mixer.h>
+
 typedef enum STATE STATE;
 enum STATE {WAITING,FOLLOWING,ATTACKING};
+
 
 typedef struct 
 {
@@ -27,21 +25,7 @@ typedef struct
     int A;
 }Struct_robotAtt;
 
-typedef struct 
-{
-    SDL_Surface *robot[5];
-    SDL_Rect Posrobot;
-    int direction;
-    STATE state;
-    double velocity;
-    double acceleration;
-}ROBOT2;
 
-typedef struct 
-{
-    SDL_Surface *map;
-    SDL_Rect PosMap,PosRectMap;
-}MAP;
 typedef struct 
 {
     SDL_Surface *minimap;
@@ -53,23 +37,9 @@ typedef struct
       SDL_Surface *point;
 }point;
 
-void initialiserpoint (point *point);
-void initialiser(Struct_robot *ROBOT);
 void initialiserattack(Struct_robotAtt *ROBOTA);
-void initialiser2(ROBOT2 *robot);
-void   Testecran (Struct_robot *ROBOT);
-void initialiserminiMap (miniMAP *minimap);
-void initialiserMap (MAP *map);
-int scrolling (Struct_robot *ROBOT,MAP *map);
-int acceleration (ROBOT2 *robot,Uint32 dt);
-void affichage(Struct_robot *ROBOT,Struct_robotAtt *ROBOTA,SDL_Surface *ecran,int i,SDL_Surface *map,SDL_Rect positionmap,SDL_Surface *minimap,SDL_Rect positionminimap,int distance);
-void affichage2(ROBOT2 *robot,SDL_Surface *ecran,int i,SDL_Surface *RectangleRobot,SDL_Rect PosRectangleRobot,point *point);
-int  Mouvemant(Struct_robot *ROBOT,SDL_Surface *ecran,int i);
-void Mouvemantpoint(point *point,SDL_Surface *ecran,miniMAP *MP);
-int robot2mouvemant(ROBOT2 *robot,SDL_Surface *ecran,int i2,SDL_Rect Posrobot);
-int  Mouvemantattack(ROBOT2 *robot,SDL_Surface *ecran,int i2,SDL_Rect Posrobot,Uint32 dt);
-void liberation(Struct_robot *ROBOT);
-void liberation2(ROBOT2 *robot);
-int  AI(ROBOT2 *robot2,Struct_robot *robot1,SDL_Surface *ecran,Uint32 dt);
-#endif
+void initialiser(Struct_robot *ROBOT);
+void affichage(Struct_robot *ROBOT,Struct_robotAtt *ROBOTA,SDL_Surface *ecran,int i,int distance);
+void liberation(Struct_robot *ROBOT,Struct_robotAtt *att);
 
+#endif 
